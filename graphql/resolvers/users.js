@@ -28,7 +28,13 @@ module.exports = {
       info){
       // Validate user data
       // Test if user already exist
-
+      const user = await User.findOne({username})
+      if(user){
+        throw new UserInputError('Name taken')
+          errors: {
+            username: 'This name is already taken'
+          }
+      }
       // hash password and create auth token ( pkgs bcryptjs jsonwebtoken)
       password = await bcrypt.hash(password,12)
       const newUser = new User({
