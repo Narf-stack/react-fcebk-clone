@@ -9,7 +9,7 @@ module.exports = {
   Query:{
     async getPosts() {
       try{
-        const posts = await Post.find();
+        const posts = await Post.find().sort({createdAt: -1});
         return posts;
       }
       catch(err){
@@ -19,7 +19,7 @@ module.exports = {
 
     async getPost(_,{postId}) {
       try{
-        const post = await Post.findById(postId).sort({createdAt: -1});
+        const post = await Post.findById(postId);
         //  -1 = sort descending
         if(post){
           return post;
