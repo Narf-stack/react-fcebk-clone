@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card,Icon, Label, Image, Button } from 'semantic-ui-react'
+import { Card, Image } from 'semantic-ui-react'
 import moment from 'moment'
 import {Link} from 'react-router-dom'
 
@@ -29,20 +29,20 @@ export default function PostCard({post:{id, body, createdAt, username, likeCount
         </Card.Description>
       </Card.Content>
       <Card.Content extra>
-        <div class="ui labeled button" tabindex="0" onClick={likePost}>
-          <div class="ui teal button basic" >
-            <i class="heart icon"></i> Like
+        <div className="ui labeled button" tabIndex="0" onClick={likePost}>
+          <div className="ui teal button basic" >
+            <i className="heart icon"></i> Like
           </div>
-          <a class="ui basic teal left pointing label">
+          <a className="ui basic teal left pointing label">
             {likeCount}
           </a>
         </div>
 
-        <div class="ui labeled button" tabindex="0" onClick={commentOnPost}>
-          <div class="ui blue button basic" >
-            <i class="comment icon"></i> Like
+        <div className="ui labeled button" tabIndex="0" onClick={commentOnPost}>
+          <div className="ui blue button basic" >
+            <i className="comment icon"></i> Like
           </div>
-          <a class="ui basic blue left pointing label">
+          <a className="ui basic blue left pointing label">
             {commentCount}
           </a>
         </div>
