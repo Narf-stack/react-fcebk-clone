@@ -7,10 +7,8 @@ const LOGIN_USER = gql`
     $password: String!
   ) {
     login(
-      registerInput: {
-        username: $username
-        password: $password
-      }
+      username: $username
+      password: $password
     ) {
       id
       email
