@@ -1,19 +1,20 @@
-import React from 'react'
-import { Card, Image } from 'semantic-ui-react'
+import React, {useContext} from 'react'
+import { Card, Image,Button,Icon } from 'semantic-ui-react'
 import moment from 'moment'
 import {Link} from 'react-router-dom'
 
-
-
+import LikeButton from './LikeButton'
+import {AuthContext} from '../context/auth'
 
 export default function PostCard({post:{id, body, createdAt, username, likeCount, commentCount, likes}}){
+
+  const {user} = useContext(AuthContext)
+
   function likePost(){
     console.log('like post')
   }
 
-  function commentOnPost(){
-    console.log('Comment post')
-  }
+
   return (
     <Card fluid >
       <Card.Content>
@@ -29,23 +30,24 @@ export default function PostCard({post:{id, body, createdAt, username, likeCount
         </Card.Description>
       </Card.Content>
       <Card.Content extra>
-        <div className="ui labeled button" tabIndex="0" onClick={likePost}>
-          <div className="ui teal button basic" >
-            <i className="heart icon"></i> Like
-          </div>
-          <a className="ui basic teal left pointing label">
-            {likeCount}
-          </a>
-        </div>
+        <LikeButton post={{id, likes, likeCount, likePost}} user={user}/>
 
-        <div className="ui labeled button" tabIndex="0" onClick={commentOnPost}>
+        <Button className="ui labeled button" tabIndex="0" as={Link} to={`/posts/${id}`}>
           <div className="ui blue button basic" >
-            <i className="comment icon"></i> Like
+            <i className="comment icon"></i> Comment
           </div>
-          <a className="ui basic blue left pointing label">
+          <div className="ui basic blue left pointing label">
             {commentCount}
-          </a>
-        </div>
+          </div>
+        </Button>
+
+        {user && user.username === username && (
+          <Button as="div" color="red" floated='right' onClick={()=> console.log('Delete')}>
+            <Icon name='trash' style={{margin:0}} />
+          </Button>
+
+
+          )}
       </Card.Content>
     </Card>
   )
