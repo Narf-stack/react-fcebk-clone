@@ -5,20 +5,24 @@ import {useMutation} from '@apollo/react-hooks'
 import {FETCH_POSTS_QUERY} from '../utils/graphql'
 
 
-export default function DeleteButton({postId, callback}){
-  // console.log(postId)
+export default function DeleteButton({postId, commentId, callback}){
+  // console.log(commentId)
   const [confirmOpen, setConfirmOpen] =useState(false)
   const [ errors,setErrors] = useState({})
-  const [deletePost] = useMutation(DELETE_POST_MUTATION,{
+  const mutation = commentId ? DELETE_COMMENT_MUTATION : DELETE_POST_MUTATION
+  // console.log(mutation)
+  const [deletePostOrCommMutation] = useMutation(mutation,{
     update(proxy){
       setConfirmOpen(false)
-      // Remove post from cache
-      const data = proxy.readQuery({
-        query:FETCH_POSTS_QUERY
-      })
-      // console.log(proxy)
-      data.getPosts = data.getPosts.filter(p => p.id !== postId)
-      proxy.writeQuery({query: FETCH_POSTS_QUERY, data })
+      if(!commentId){
+        // Remove post from cache
+        const data = proxy.readQuery({
+          query:FETCH_POSTS_QUERY
+        })
+        // console.log(proxy)
+        data.getPosts = data.getPosts.filter(p => p.id !== postId)
+        proxy.writeQuery({query: FETCH_POSTS_QUERY, data })
+      }
       // Go back to home page
       if(callback) callback();
     },onError(err,networkError){
@@ -28,7 +32,7 @@ export default function DeleteButton({postId, callback}){
       setErrors(err&&err.graphQLErrors[0]?err.graphQLErrors[0].extensions.exception.errors:{});
       // console.log(err.networkError.result.errors)
     },
-    variables:{postId}
+    variables:{postId, commentId}
   })
 
   return(
@@ -39,7 +43,7 @@ export default function DeleteButton({postId, callback}){
       <Confirm
         open={confirmOpen}
         onCancel={()=>setConfirmOpen(false)}
-        onConfirm={deletePost}
+        onConfirm={deletePostOrCommMutation}
       />
     </>
   )
@@ -49,5 +53,16 @@ export default function DeleteButton({postId, callback}){
 const DELETE_POST_MUTATION = gql`
   mutation deletePost($postId:ID!){
     deletePost(postId:$postId)
+  }
+`
+const DELETE_COMMENT_MUTATION = gql`
+  mutation deleteComment($postId:ID!, $commentId:ID!){
+    deleteComment(postId:$postId, commentId:$commentId){
+      id
+      comments{
+        id username createdAt body
+      }
+      commentCount
+    }
   }
 `
