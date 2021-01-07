@@ -3,13 +3,14 @@ import {Button, Icon,Confirm} from 'semantic-ui-react'
 import gql from 'graphql-tag'
 import {useMutation} from '@apollo/react-hooks'
 import {FETCH_POSTS_QUERY} from '../utils/graphql'
-
+import MyPopup from '../utils/MyPopup'
 
 export default function DeleteButton({postId, commentId, callback}){
   // console.log(commentId)
   const [confirmOpen, setConfirmOpen] =useState(false)
   const [ errors,setErrors] = useState({})
   const mutation = commentId ? DELETE_COMMENT_MUTATION : DELETE_POST_MUTATION
+  const val = commentId ? 'comment' : 'post'
   // console.log(mutation)
   const [deletePostOrCommMutation] = useMutation(mutation,{
     update(proxy){
@@ -37,9 +38,13 @@ export default function DeleteButton({postId, commentId, callback}){
 
   return(
     <>
-      <Button as="div" color="red" floated='right' onClick={()=>setConfirmOpen(true)}>
-        <Icon name='trash' style={{margin:0}} />
-      </Button>
+      <MyPopup
+        content={commentId? "Delete this comment": "Delete this post"}
+        >
+          <Button as="div" color="red" floated='right' onClick={()=>setConfirmOpen(true)}>
+            <Icon name='trash' style={{margin:0}} />
+          </Button>
+      </MyPopup>
       <Confirm
         open={confirmOpen}
         onCancel={()=>setConfirmOpen(false)}

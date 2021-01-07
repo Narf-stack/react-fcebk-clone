@@ -7,6 +7,7 @@ import {Button, Card, Grid, Image, Icon, Label, Form} from 'semantic-ui-react'
 import {AuthContext} from '../context/auth'
 import DeleteButton from '../components/DeleteButton'
 import LikeButton from '../components/LikeButton'
+import MyPopup from '../utils/MyPopup'
 
 
 export default function SinglePost(props){
@@ -72,17 +73,24 @@ export default function SinglePost(props){
               <hr />
               <Card.Content extra>
                 <LikeButton user={user} post={{id, likeCount, likes}}/>
-                <Button as="div" labelPosition='right'
-                  onClick={()=> console.log('Comment on post')}>
+                <MyPopup
+                  content={commentCount === 0 ? "Why so quiet ?"
+                        : commentCount === 1 ? "Follow the lead, there is only one comment here"
+                        : "Things are getting serious here, join the group"}
+                >
+                  <Button as="div" labelPosition='right'
+                    onClick={()=> console.log('Comment on post')}>
 
-                  <Button basic colo='blue'>
-                    <Icon name='comments'/>
+                    <Button basic colo='blue'>
+                      <Icon name='comments'/>
+                    </Button>
+
+                    <Label basic color='blue' pointing='left'>
+                      {commentCount}
+                    </Label>
                   </Button>
+                </MyPopup>
 
-                  <Label basic color='blue' pointing='left'>
-                    {commentCount}
-                  </Label>
-                </Button>
                 {user && user.username === username && (
                     <DeleteButton postId={id} callback={deletePostCallback}/>
                   )}
